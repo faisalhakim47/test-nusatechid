@@ -1,73 +1,56 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Installasi
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+1. Clone git repository
+2. Jalankan npm install
+3. Konfigurasi file .env, bisa mengambil dari file .env.example
+4. Jalankan npm start
+5. Database akan otomatis digenerate oleh TypeORM melalui entity yang sudah didaftarakan
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Hasil Tes
 
-## Description
+1. relational database (user profile)
+  1. data user berisi: id user, email, password (encrypted),status(pending,registered,verified)
+  2. data wallet/balance user (1 id_user ≥0 id_wallet ≤ total id_currency) berisi :id_wallet, id_currency, id_user, amount
+  3. data currency (1 id_balance = 1 id_currency)
+  4. data pin /mailer (id_user ≥1): id_verifikasi, email,pin,status(pending,registered,verified,expired)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+__Untuk mempercepat review sql saya sudah dump sql yang digenerate aplikasi ke file preview.sql.__
 
-## Installation
+2. ~~konsep cronjob/worker mailer (api)~~
+  1. ~~setiap 10 detik ngecek user yang pending untuk dikirimi verifikasi register /pin~~
+  2. ~~setelah mengirim email maka status user dan status pin berubah menjadi registered~~
+  3. ~~setelah verifikasi pin maka status user dan status pin berubah menjadi verified~~
+  4. ~~pin expired jika tidak di verifikasi lebih dari 1jam~~
 
-```bash
-$ npm install
+Halaman yang harus di siapkan :
+
+1. post signup
+
+```shell
+curl -X POST http://localhost:3000/users -H "Content-Type: application/json" -d '{ "username": "exampleuser001", "email": "6ik5e.exampleuser001@inbox.testmail.app", "password": "exampleuser001" }'
 ```
 
-## Running the app
+2. post signin
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```shell
+curl -X POST http://localhost:3000/auth/login -H "Content-Type: application/json" -d '{ "username": "exampleuser001", "password": "exampleuser001" }'
 ```
 
-## Test
+3. get userdata (email, balance ,status dll.)
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```shell
+curl http://localhost:3000/profile -H "Authorization: Bearer ACCESS_TOKEN_YANG_DIDAPAT_DARI_AUTH_LOGIN"
 ```
 
-## Support
+4. ~~put user email (ganti email yang saat ini dipakai) ⇒ verifikasi email lama dulu ⇒kemudian verifikasi email baru~~
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
+# Kesimpulan
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Tes ini saya kerjakan dalam waktu 4 jam. Dalam waktu jam tersebut saya berhasil membuat:
+- Inisiasi struktur database sesuai dengan spesifikasi, konvensi penamaan diusahakan mengikuti spesifikasi namun sebagian harus mengikuti konvensi framework.
+- Membuat pendaftaran user beserta validasi form.
+- Membuat authentikasi dengan berbasis JWT.
+- Menampilkan data dengan authentikasi.
 
-## License
-
-Nest is [MIT licensed](LICENSE).
+Masih banyak task dalam tes yang belum berhasil diselesaikan, terutama yang berkaitan dengan email. Kendala yang saya alami adalah waktu pengerjaan dan tidak ditemukannya solusi official untuk email handling di framework nestjs.
