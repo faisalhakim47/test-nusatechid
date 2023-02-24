@@ -8,42 +8,34 @@
 
 # Hasil Tes
 
-1. relational database (user profile)
-  1. data user berisi: id user, email, password (encrypted),status(pending,registered,verified)
-  2. data wallet/balance user (1 id_user ≥0 id_wallet ≤ total id_currency) berisi :id_wallet, id_currency, id_user, amount
-  3. data currency (1 id_balance = 1 id_currency)
-  4. data pin /mailer (id_user ≥1): id_verifikasi, email,pin,status(pending,registered,verified,expired)
+## Database
+
+1. Tabel user: src/user/entities/user.entity.ts
+2. Tabel wallet: src/wallet/entities/wallet.entity.ts
+3. Tabel currency: src/currency/entities/currency.entity.ts
+4. Tabel verifikasi email: src/user-email-verifications/entities/user-email-verification.entity.ts
 
 __Untuk mempercepat review sql saya sudah dump sql yang digenerate aplikasi ke file preview.sql.__
 
-2. ~~konsep cronjob/worker mailer (api)~~
-  1. ~~setiap 10 detik ngecek user yang pending untuk dikirimi verifikasi register /pin~~
-  2. ~~setelah mengirim email maka status user dan status pin berubah menjadi registered~~
-  3. ~~setelah verifikasi pin maka status user dan status pin berubah menjadi verified~~
-  4. ~~pin expired jika tidak di verifikasi lebih dari 1jam~~
+## Halaman yang harus di siapkan:
 
-Halaman yang harus di siapkan :
-
-1. post signup
+1. Register
 
 ```shell
 curl -X POST http://localhost:3000/users -H "Content-Type: application/json" -d '{ "username": "exampleuser001", "email": "6ik5e.exampleuser001@inbox.testmail.app", "password": "exampleuser001" }'
 ```
 
-2. post signin
+2. Login
 
 ```shell
 curl -X POST http://localhost:3000/auth/login -H "Content-Type: application/json" -d '{ "username": "exampleuser001", "password": "exampleuser001" }'
 ```
 
-3. get userdata (email, balance ,status dll.)
+3. User
 
 ```shell
 curl http://localhost:3000/profile -H "Authorization: Bearer ACCESS_TOKEN_YANG_DIDAPAT_DARI_AUTH_LOGIN"
 ```
-
-4. ~~put user email (ganti email yang saat ini dipakai) ⇒ verifikasi email lama dulu ⇒kemudian verifikasi email baru~~
-
 
 # Kesimpulan
 
